@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Інформація про авто</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <a class="navbar-brand" th:href="@{/}">Всі оголошення</a>
+        <a class="navbar-brand" sec:authorize="isAuthenticated()" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+        <div class="navbar-nav" sec:authorize="!isAuthenticated()">
+            <form th:action="@{/auth/login}" class="nav-item">
+                <input type="submit" class="btn btn-outline-primary" value="Login">
+            </form>
+            <form th:action="@{/auth/register}" class="nav-item">
+                <input type="submit" class="btn btn-outline-secondary" value="Sign Up">
+            </form>
+        </div>
+        <a class="btn btn-lg btn-danger ml-auto" sec:authorize="isAuthenticated()" th:href="@{/auth/logout}">Вихід</a>
+    </nav>
+</div>
+<div>
+    <h1 class="text-center" style="margin-top: 100px" th:text="${realty.header}"></h1>
+    <form class="text-center" th:action="@{/nedvizhimost/change-bookmark/{realtyId}(realtyId=${realty.id})}" method="post">
+        <button type="submit" value="false" name="stateBookmark" th:if="${bookmark == true}" class="heart">
+            <i class="fas fa-heart"></i>
+        </button>
+        <button type="submit" value="true" name="stateBookmark" th:if="${bookmark == false}" class="heart">
+            <i class="far fa-heart"></i>
+        </button>
+    </form>
+</div>
+<!--<div class="text-center" th:if="${files.size()} != 0">
+        <button onclick="showPrevious()">Previous</button>
+    <img th:src="@{/images/__${files.get(0)}__}" >
+        <button onclick="showNext()">Next</button>
+</div>-->
+<div class="text-center" th:if="${files.size()} != 0">
+<!--    <button onclick="showPrevious()">Previous</button>-->
+    <button type="button" onclick="showPrevious()" class="btn btn-primary"><span class="fa fa-arrow-left"></span></button>
+    <img id="image" th:src="@{__${files.get(0)}__}" >
+    <button type="button" onclick="showNext()" class="btn btn-primary"><span class="fa fa-arrow-right"></span></button>
+</div>
+<table style="width: 70%;margin-top: 20px;" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Призначення</th>
+        <th>Ціна</th>
+        <th>Адреса</th>
+        <th>Кількість кімнат</th>
+        <th>Житлова площа</th>
+        <th>Стан ремонту</th>
+        <th>Тип будинку</th>
+        <th>Меблі</th>
+        <th>Тип опалення</th>
+        <th>Площа земельної ділянки</th>
+        <th>Кількість поверхів</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${realty.purpose.title}"></td>
+        <td th:text="${realty.price} + ' ' + ${realty.currency}"></td>
+        <td th:if="${realty.address.district} == null"
+            th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title}"></td>
+        <td th:if="${realty.address.district} != null"
+            th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title} + ' ' + ${realty.address.district.title}"></td>
+        <td th:text="${realty.numberOfRooms}"></td>
+        <td th:text="${realty.housingArea} + ' m&sup2'"></td>
+        <td th:text="${realty.repair.title}"></td>
+        <td th:text="${realty.construction.title}"></td>
+        <td th:text="${realty.furnishing == false} ? 'Ні' : 'Так'"></td>
+        <td th:text="${realty.heating.title}"></td>
+        <td th:text="${realty.house.landArea} + ' сот.'"></td>
+        <td th:text="${realty.house.floors}"></td>
+    </tr>
+    </tbody>
+</table>
+<div style="width: 70%;margin: auto">
+    <h4>Опис</h4>
+    <p th:text="${realty.additionalInformation}"></p>
+</div>
+<div  style="width: 70%;margin: auto">
+    <h4>Власник оголошення</h4>
+    <p th:text="${realty.advertisement.userEmail.firstname} + ' ' + ${realty.advertisement.userEmail.lastname}"></p>
+    <h4>Контакти власника оголошення</h4>
+    <p th:text="'Номер телефону: ' + ${realty.advertisement.userEmail.phoneNumber}"></p>
+    <p th:text="'Електронна почта: ' + ${realty.advertisement.userEmail.email}"></p>
+</div>
+<script th:inline="javascript">
+    var imagePaths = [[${files}]];
+    var currentIndex = 0;
+    var imageElement = document.getElementById('image');
+
+    function showImage() {
+        imageElement.src = imagePaths.at(currentIndex);
+    }
+
+    function showPrevious() {
+        if (currentIndex > 0) {
+            currentIndex = currentIndex - 1;
+            showImage();
+        }
+    }
+
+    function showNext() {
+        if (currentIndex < imagePaths.length-1) {
+            currentIndex = currentIndex + 1;
+            showImage();
+        }
+    }
+</script>
+</body>
+</html>

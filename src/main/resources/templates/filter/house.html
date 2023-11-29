@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Фільтр</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/css/forms.css">
+    <script src="/js/Address.js"></script>
+</head>
+<body>
+<div class="fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <a class="navbar-brand" th:href="@{/}">Всі оголошення</a>
+        <a class="navbar-brand" sec:authorize="isAuthenticated()" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+        <div class="navbar-nav" sec:authorize="!isAuthenticated()">
+            <form th:action="@{/auth/login}" class="nav-item">
+                <input type="submit" class="btn btn-outline-primary" value="Login">
+            </form>
+            <form th:action="@{/auth/register}" class="nav-item">
+                <input type="submit" class="btn btn-outline-secondary" value="Sign Up">
+            </form>
+        </div>
+        <a class="btn btn-lg btn-danger ml-auto" sec:authorize="isAuthenticated()" th:href="@{/auth/logout}">Вихід</a>
+    </nav>
+</div>
+<div class="container">
+    <div class="page-title">
+        <h1>Фільтр</h1>
+    </div>
+    <div class="form-card">
+        <!-- Your form content goes here -->
+        <form th:action="@{/nedvizhimost/filter/house/{property}(property=${property})}" th:object="${houseFilter}" method="post">
+            <div class="form-group">
+                <label for="purpose">Підкатегорія</label>
+                <select th:field="*{purpose}" class="form-control" id="purpose" name="purpose" >
+                    <option value="Всі оголошення" selected="selected">Всі оголошення</option>
+                    <option value="Надання в оренду">Надання в оренду</option>
+                    <option value="Продаж">Продаж</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="currencyAPI">Валюта</label>
+                <div id="currencyAPI">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" th:field="*{currency}" type="radio" name="inlineRadioOptions" id="currency1" th:errorclass="is-invalid" th:value="UAH">
+                        <label class="form-check-label" for="currency1">UAH</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency2" th:errorclass="is-invalid" th:value="USD">
+                        <label class="form-check-label" for="currency2">USD</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency3" th:errorclass="is-invalid" th:value="EUR">
+                        <label class="form-check-label" for="currency3">EUR</label>
+                    </div>
+                    <span th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <label>Ціна</label>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <input th:field="*{firstPrice}" type="number" class="form-control" value="0" name="firstPrice" placeholder="від: " id="firstPrice">
+                </div>
+                <div class="form-group col-md-2">
+                    <input type="number" th:field="*{lastPrice}" class="form-control" value="1000000000" name="lastPrice" placeholder="до: " id="lastPrice">
+                </div>
+            </div>
+
+            <label>Житлова площа</label>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <input type="text" th:field="*{firstHouseArea}" class="form-control" value="0" placeholder="від: " name="firstHousingArea" id="firstHousingArea">
+                </div>
+                <div class="form-group col-md-2">
+                    <input type="text" th:field="*{lastHouseArea}" class="form-control" value="100000" placeholder="до: " name="lastHousingArea"  id="lastHousingArea">
+                </div>
+            </div>
+
+            <label>Площа земельної ділянки</label>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <input type="text" th:field="*{firstLandArea}" class="form-control" th:value="0" placeholder="від: " name="firstLandArea" id="firstLandArea">
+                </div>
+                <div class="form-group col-md-2">
+                    <input type="text" th:field="*{lastLandArea}" class="form-control" th:value="10000" placeholder="до: " name="lastLandArea"  id="lastLandArea">
+                </div>
+            </div>
+
+            <label>Кількість кімнат</label>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <input type="number" th:field="*{firstNumberRooms}" class="form-control" value="0" name="firstNumberRooms" placeholder="від: " id="firstNumberRooms">
+                </div>
+                <div class="form-group col-md-2">
+                    <input type="number" th:field="*{lastNumberRooms}" class="form-control" value="1000" name="lastNumberRooms" placeholder="до: " id="lastNumberRooms">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="repair">Стан ремонту</label>
+                <select th:field="*{repairTitle}" class="form-control" id="repair" name="repair">
+                    <option value="Всі оголошення" selected="selected">Всі оголошення</option>
+                    <!--      <tr th:each="repair : ${repairs}">-->
+                    <!--        <option th:text="${repair.title}"></option>-->
+                    <!--      </tr>-->
+                    <option th:each="repair : ${repairs}"
+                            th:text="${repair.title}"
+                            th:value="${repair.title}">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="construction">Тип будинку</label>
+                <select th:field="*{constructionId}" class="form-control" id="construction" name="construction">
+                    <option value="0" selected="selected">Всі оголошення</option>
+                    <option th:each="construction : ${constructions}"
+                            th:text="${construction.title}"
+                            th:value="${construction.id}">
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="heating">Тип опалення</label>
+                <select th:field="*{heatingId}" class="form-control" id="heating" name="heating" >
+                    <option value="0" selected="selected">Всі оголошення</option>
+                    <option th:each="heating : ${heatings}"
+                            th:text="${heating.title}"
+                            th:value="${heating.id}">
+                </select>
+            </div>
+
+            <div class="form-group" >
+                <label for="furnishing">Наявність меблів</label>
+                <div id="furnishing">
+                    <div class="form-check form-check-inline">
+                        <input th:field="*{furnishing}" class="form-check-input" type="radio" name="furnishing" id="furnishing2" value="1" >
+                        <label class="form-check-label" for="furnishing2">Так</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input th:field="*{furnishing}" class="form-check-input" type="radio" name="furnishing" id="furnishing3" value="0" >
+                        <label class="form-check-label" for="furnishing3">Ні</label>
+                    </div>
+                </div>
+            </div>
+
+            <label>Кількість поверхів</label>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <input type="number" th:field="*{firstFloors}" value="0" class="form-control" placeholder="від: " name="firstFloors" id="firstFloors">
+                </div>
+                <div class="form-group col-md-2">
+                    <input type="number" th:field="*{lastFloors}" class="form-control" placeholder="до: " value="1000" name="lastFloors"  id="lastFloors">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="region">Регіон</label>
+                <div class="form-group">
+                    <select th:field="*{regionTitle}" class="custom-select"  name="region" id="region" onchange="updateLocalities()">
+                        <option value="null" th:value="'Не вибрано'">Не вибрано</option>
+                        <tr th:each="region : ${regions}">
+                            <option th:text="${region.title}" th:value="${region.title}"></option>
+                        </tr>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="display: none;" id="localityDiv">
+                <label for="localityId">Населений пункт</label>
+                <div class="form-group">
+                    <select th:field="*{localityId}" class="custom-select" name="localityId" onchange="updateDistricts()" id="localityId">
+                        <option value="0" th:value="0">Не вибрано</option>
+                        <tr th:each="locality : ${localities}">
+                            <option th:text="${locality.title}" th:value="${locality.id}" th:attr="data-region=${locality.region.title}"></option>
+                        </tr>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="display: none;" id="districtDiv">
+                <label for="districtId">Район</label>
+                <div class="form-group">
+                    <select th:field="*{districtId}" class="custom-select" name="districtId" id="districtId">
+                        <option th:text="'Не вибрано'" th:value="0"></option>
+                        <tr th:each="district : ${districts}">
+                            <option th:text="${district.title}" th:value="${district.id}" th:attr="data-locality=${district.locality.id}"></option>
+                        </tr>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Далі</button>
+        </form>
+    </div>
+</div>
+
+<!--
+<div style="margin-top: 100px" class="text-center">
+    <h1>Фильтр</h1>
+</div>
+<form th:action="@{/nedvizhimost/filter/house/{property}(property=${property})}" th:object="${houseFilter}" style="width: 50%;margin: auto;" method="post">
+    <div class="form-group">
+        <label for="purpose">Підкатегорія</label>
+        <select th:field="*{purpose}" class="form-control" id="purpose" name="purpose" >
+            <option value="Всі оголошення" selected="selected">Всі оголошення</option>
+            <option value="Надання в оренду">Надання в оренду</option>
+            <option value="Продаж">Продаж</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="currencyAPI">Валюта</label>
+        <div id="currencyAPI">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" th:field="*{currency}" type="radio" name="inlineRadioOptions" id="currency1" th:errorclass="is-invalid" th:value="UAH">
+                <label class="form-check-label" for="currency1">UAH</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency2" th:errorclass="is-invalid" th:value="USD">
+                <label class="form-check-label" for="currency2">USD</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency3" th:errorclass="is-invalid" th:value="EUR">
+                <label class="form-check-label" for="currency3">EUR</label>
+            </div>
+            <span th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <label>Ціна</label>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <input th:field="*{firstPrice}" type="number" class="form-control" value="0" name="firstPrice" placeholder="від: " id="firstPrice">
+        </div>
+        <div class="form-group col-md-2">
+            <input type="number" th:field="*{lastPrice}" class="form-control" value="1000000000" name="lastPrice" placeholder="до: " id="lastPrice">
+        </div>
+    </div>
+
+    <label>Житлова площа</label>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <input type="text" th:field="*{firstHouseArea}" class="form-control" value="0" placeholder="від: " name="firstHousingArea" id="firstHousingArea">
+        </div>
+        <div class="form-group col-md-2">
+            <input type="text" th:field="*{lastHouseArea}" class="form-control" value="100000" placeholder="до: " name="lastHousingArea"  id="lastHousingArea">
+        </div>
+    </div>
+
+    <label>Площа земельної ділянки</label>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <input type="text" th:field="*{firstLandArea}" class="form-control" th:value="0" placeholder="від: " name="firstLandArea" id="firstLandArea">
+        </div>
+        <div class="form-group col-md-2">
+            <input type="text" th:field="*{lastLandArea}" class="form-control" th:value="10000" placeholder="до: " name="lastLandArea"  id="lastLandArea">
+        </div>
+    </div>
+
+    <label>Кількість кімнат</label>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <input type="number" th:field="*{firstNumberRooms}" class="form-control" value="0" name="firstNumberRooms" placeholder="від: " id="firstNumberRooms">
+        </div>
+        <div class="form-group col-md-2">
+            <input type="number" th:field="*{lastNumberRooms}" class="form-control" value="1000" name="lastNumberRooms" placeholder="до: " id="lastNumberRooms">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="repair">Стан ремонту</label>
+        <select th:field="*{repairTitle}" class="form-control" id="repair" name="repair">
+            <option value="Всі оголошення" selected="selected">Всі оголошення</option>
+            &lt;!&ndash;      <tr th:each="repair : ${repairs}">&ndash;&gt;
+            &lt;!&ndash;        <option th:text="${repair.title}"></option>&ndash;&gt;
+            &lt;!&ndash;      </tr>&ndash;&gt;
+            <option th:each="repair : ${repairs}"
+                    th:text="${repair.title}"
+                    th:value="${repair.title}">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="construction">Тип будинку</label>
+        <select th:field="*{constructionId}" class="form-control" id="construction" name="construction">
+            <option value="0" selected="selected">Всі оголошення</option>
+            <option th:each="construction : ${constructions}"
+                    th:text="${construction.title}"
+                    th:value="${construction.id}">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="heating">Тип опалення</label>
+        <select th:field="*{heatingId}" class="form-control" id="heating" name="heating" >
+            <option value="0" selected="selected">Всі оголошення</option>
+            <option th:each="heating : ${heatings}"
+                    th:text="${heating.title}"
+                    th:value="${heating.id}">
+        </select>
+    </div>
+
+    <div class="form-group" >
+        <label for="furnishing">Наявність меблів</label>
+        <div id="furnishing">
+            <div class="form-check form-check-inline">
+                <input th:field="*{furnishing}" class="form-check-input" type="radio" name="furnishing" id="furnishing2" value="1" >
+                <label class="form-check-label" for="furnishing2">Так</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input th:field="*{furnishing}" class="form-check-input" type="radio" name="furnishing" id="furnishing3" value="0" >
+                <label class="form-check-label" for="furnishing3">Ні</label>
+            </div>
+        </div>
+    </div>
+
+    <label>Кількість поверхів</label>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <input type="number" th:field="*{firstFloors}" value="0" class="form-control" placeholder="від: " name="firstFloors" id="firstFloors">
+        </div>
+        <div class="form-group col-md-2">
+            <input type="number" th:field="*{lastFloors}" class="form-control" placeholder="до: " value="1000" name="lastFloors"  id="lastFloors">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="region">Регіон</label>
+        <div class="form-group">
+            <select th:field="*{regionTitle}" class="custom-select"  name="region" id="region" onchange="updateLocalities()">
+                <option value="null" th:value="'Не вибрано'">Не вибрано</option>
+                <tr th:each="region : ${regions}">
+                    <option th:text="${region.title}" th:value="${region.title}"></option>
+                </tr>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" style="display: none;" id="localityDiv">
+        <label for="localityId">Населений пункт</label>
+        <div class="form-group">
+            <select th:field="*{localityId}" class="custom-select" name="localityId" onchange="updateDistricts()" id="localityId">
+                <option value="0" th:value="0">Не вибрано</option>
+                <tr th:each="locality : ${localities}">
+                    <option th:text="${locality.title}" th:value="${locality.id}" th:attr="data-region=${locality.region.title}"></option>
+                </tr>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" style="display: none;" id="districtDiv">
+        <label for="districtId">Район</label>
+        <div class="form-group">
+            <select th:field="*{districtId}" class="custom-select" name="districtId" id="districtId">
+                <option th:text="'Не вибрано'" th:value="0"></option>
+                <tr th:each="district : ${districts}">
+                    <option th:text="${district.title}" th:value="${district.id}" th:attr="data-locality=${district.locality.id}"></option>
+                </tr>
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Далі</button>
+</form>-->
+<script th:inline="javascript">
+
+    validateInputPositiveInteger('firstPrice')
+    validateInputPositiveInteger('lastPrice')
+    validateInputPositiveInteger('firstNumberRooms')
+    validateInputPositiveInteger('lastNumberRooms')
+    validateInputPositiveInteger('firstFloors')
+    validateInputPositiveInteger('lastFloors')
+
+    validateInputPositiveFloat('firstHousingArea')
+    validateInputPositiveFloat('lastHousingArea')
+    validateInputPositiveFloat('firstLandArea')
+    validateInputPositiveFloat('lastLandArea')
+</script>
+</body>
+</html>

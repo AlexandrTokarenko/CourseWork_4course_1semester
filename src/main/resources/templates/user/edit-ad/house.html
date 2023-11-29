@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Зміна оголошення</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/css/forms.css">
+    <script src="/js/Address.js"></script>
+</head>
+<body>
+<div class="fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <a class="navbar-brand" th:href="@{/}">Всі оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+        <a class="btn btn-lg btn-danger" style="margin-left: auto" th:href="@{/auth/logout}">Вихід</a>
+    </nav>
+</div>
+
+
+<div class="container">
+    <div class="page-title">
+        <h1>Редагування оголошення</h1>
+    </div>
+    <div class="form-card">
+        <!-- Your form content goes here -->
+        <form enctype="multipart/form-data" th:action="@{/nedvizhimost/my-ads/edit-ad/house/{realtyId}(realtyId=${realtyHouse.id})}" th:object="${realtyHouse}" method="post">
+            <div class="form-group">
+                <label for="purpose">Для чого викладаєте оголошення?</label>
+                <select class="form-control" id="purpose" th:field="*{purposeTitle}" th:errorclass="is-invalid" name="purpose_title">
+                    <option value="Надання в оренду">Надання в оренду</option>
+                    <option value="Продаж">Продаж</option>
+                </select>
+                <span th:if="${#fields.hasErrors('purposeTitle')}" th:errors="*{purposeTitle}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="housing_area">Заголовок до вашого оголошення</label>
+                <input type="text" class="form-control" name="carModel" th:field="*{header}" th:errorclass="is-invalid" id="header">
+                <small id="headerHelp" class="form-text text-muted">Саме за цим заголовком користувачі будуть шукати ваше оголошення</small>
+                <span th:if="${#fields.hasErrors('header')}" th:errors="*{header}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="currencyAPI">Валюта</label>
+                <div id="currencyAPI">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" th:field="*{currency}" type="radio" name="inlineRadioOptions" id="currency1" th:errorclass="is-invalid" th:value="UAH">
+                        <label class="form-check-label" for="currency1">UAH</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency2" th:errorclass="is-invalid" th:value="USD">
+                        <label class="form-check-label" for="currency2">USD</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency3" th:errorclass="is-invalid" th:value="EUR">
+                        <label class="form-check-label" for="currency3">EUR</label>
+                    </div>
+                    <span th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="price">Ціна</label>
+                <input type="number" min="1" class="form-control" th:errorclass="is-invalid" th:field="*{price}" name="price" id="price" >
+                <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="housing_area">Житлова площа</label>
+                <input type="text" class="form-control" th:errorclass="is-invalid" name="housing_area" th:field="*{housingArea}" id="housing_area">
+                <span th:if="${#fields.hasErrors('housingArea')}" th:errors="*{housingArea}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="land_area">Площа земельної ділянки (в сотках)</label>
+                <input type="text" class="form-control" th:errorclass="is-invalid" name="land_area" th:field="*{landArea}" id="land_area">
+                <span th:if="${#fields.hasErrors('landArea')}" th:errors="*{landArea}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="number_of_rooms">Кількість кімнат</label>
+                <input type="number" class="form-control" th:errorclass="is-invalid" name="number_of_rooms" th:field="*{numberOfRooms}" id="number_of_rooms" >
+                <span th:if="${#fields.hasErrors('numberOfRooms')}" th:errors="*{numberOfRooms}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="repair">Стан ремонту</label>
+                <select class="form-control" id="repair" th:field="*{repairTitle}" th:errorclass="is-invalid" name="repair">
+                    <option hidden selected th:value="null">Не вибрано</option>
+                    <!--      <tr th:each="repair : ${repairs}">-->
+                    <!--        <option th:text="${repair.title}"></option>-->
+                    <!--      </tr>-->
+                    <option th:each="repair : ${repairs}"
+                            th:text="${repair.title}"
+                            th:value="${repair.title}">
+                </select>
+                <span th:if="${#fields.hasErrors('repairTitle')}" th:errors="*{repairTitle}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="construction">Тип будинку</label>
+                <select class="form-control" id="construction" th:errorclass="is-invalid" th:field="*{constructionId}" name="construction">
+                    <option hidden selected th:value="null">Не вибрано</option>
+                    <option th:each="construction : ${constructions}"
+                            th:text="${construction.title}"
+                            th:value="${construction.id}">
+                </select>
+                <span th:if="${#fields.hasErrors('constructionId')}" th:errors="*{constructionId}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="heating">Тип опалення</label>
+                <select class="form-control" id="heating" th:errorclass="is-invalid" th:field="*{heatingId}" name="heating" >
+                    <option th:each="heating : ${heatings}"
+                            th:text="${heating.title}"
+                            th:value="${heating.id}"
+                            th:selected="${heating.id} == *{heatingId}">
+                </select>
+                <span th:if="${#fields.hasErrors('heatingId')}" th:errors="*{heatingId}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="furnishing">Наявність меблів</label>
+                <div id="furnishing">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" th:field="*{furnishing}" th:errorclass="is-invalid" type="radio" name="inlineRadioOptions" id="furnishing1" th:value="true">
+                        <label class="form-check-label" for="furnishing1">Так</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" th:errorclass="is-invalid" th:field="*{furnishing}" name="inlineRadioOptions" id="furnishing2" th:value="false">
+                        <label class="form-check-label" for="furnishing2">Ні</label>
+                    </div>
+                </div>
+                <span th:if="${#fields.hasErrors('furnishing')}" th:errors="*{furnishing}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="floors">Кількість поверхів</label>
+                <input type="number" min="1" class="form-control" th:field="*{numberOfFloors}" th:errorclass="is-invalid" name="floors" id="floors">
+                <span th:if="${#fields.hasErrors('numberOfFloors')}" th:errors="*{numberOfFloors}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="add_information">Опис</label>
+                <input type="text" class="form-control" th:field="*{additionalInformation}" th:errorclass="is-invalid" id="add_information">
+                <span th:if="${#fields.hasErrors('additionalInformation')}" th:errors="*{additionalInformation}" class="invalid-feedback"></span>
+            </div>
+            <div class="form-group">
+                <label for="imageFile">Фото</label>
+                <input type="file" class="form-control-file" id="imageFile" accept="image/png, image/jpeg" name="imageFiles" multiple>
+                <small class="form-text text-muted" style="color: red">*Зображення відображатимуться в тому порядку, в якому вони завантажені</small>
+                <small class="form-text text-muted" style="color: red">**Приймаються файли тільки у форматі png та jpeg</small>
+            </div>
+            <div class="form-group">
+                <label for="region">Регіон</label>
+                <div class="form-group">
+                    <select th:field="*{regionTitle}" class="custom-select" th:errorclass="is-invalid" name="region" id="region" onchange="updateLocalities()">
+                        &lt;!&ndash;                <option value="null" th:value="'Не вибрано'">Не вибрано</option>&ndash;&gt;
+                        <tr th:each="region : ${regions}">
+                            <option th:text="${region.title}" th:selected="${region.title} == *{regionTitle}" th:value="${region.title}"></option>
+                        </tr>
+                    </select>
+                    <span th:if="${#fields.hasErrors('regionTitle')}" th:errors="*{regionTitle}" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <div class="form-group" style="display: none;" id="localityDiv">
+                <label for="localityId">Населений пункт</label>
+                <div class="form-group">
+                    <select th:field="*{localityId}" class="custom-select" th:errorclass="is-invalid" name="localityId" onchange="updateDistricts()" id="localityId">
+                        &lt;!&ndash;                <option value="0" th:value="0">Не вибрано</option>&ndash;&gt;
+                        <tr th:each="locality : ${localities}">
+                            <option th:text="${locality.title}" th:value="${locality.id}" th:selected="${locality.id} == *{localityId}" th:attr="data-region=${locality.region.title}"></option>
+                        </tr>
+                    </select>
+                    <span th:if="${#fields.hasErrors('localityId')}" th:errors="*{localityId}" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <div class="form-group" style="display: none;" id="districtDiv">
+                <label for="districtId">Район</label>
+                <div class="form-group">
+                    <select th:field="*{districtId}" class="custom-select" th:errorclass="is-invalid" name="districtId" id="districtId">
+                        &lt;!&ndash;                <option th:text="'Не вибрано'" th:value="0"></option>&ndash;&gt;
+                        <tr th:each="district : ${districts}">
+                            <option th:text="${district.title}" th:selected="${district.id} == *{districtId}" th:value="${district.id}" th:attr="data-locality=${district.locality.id}"></option>
+                        </tr>
+                    </select>
+                    <span th:if="${#fields.hasErrors('districtId')}" th:errors="*{districtId}" class="invalid-feedback"></span>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Далі</button>
+        </form>
+    </div>
+</div>
+
+<!--<div style="margin-top: 100px" class="text-center">
+    <h1>Зміна оголошення</h1>
+</div>
+<form enctype="multipart/form-data" th:action="@{/nedvizhimost/my-ads/edit-ad/house/{realtyId}(realtyId=${realtyHouse.id})}" th:object="${realtyHouse}" style="width: 50%;margin: auto;" method="post">
+    <div class="form-group">
+        <label for="purpose">Для чого викладаєте оголошення?</label>
+        <select class="form-control" id="purpose" th:field="*{purposeTitle}" th:errorclass="is-invalid" th:value="*{purposeTitle}" name="purpose">
+            <option value="Надання в оренду">Надання в оренду</option>
+            <option value="Продаж">Продаж</option>я
+        </select>
+        <span th:if="${#fields.hasErrors('purposeTitle')}" th:errors="*{purposeTitle}" class="invalid-feedback"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="header">Заголовок до вашого оголошення</label>
+        <input type="text" class="form-control" name="carModel" th:field="*{header}" th:errorclass="is-invalid" th:value="*{header}" id="header">
+        <small id="headerHelp" class="form-text text-muted">Саме за цим заголовком користувачі будуть шукати ваше оголошення</small>
+        <span th:if="${#fields.hasErrors('header')}" th:errors="*{header}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="currencyAPI">Валюта</label>
+        <div id="currencyAPI">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" th:field="*{currency}" type="radio" name="inlineRadioOptions" id="currency1" th:errorclass="is-invalid" th:value="UAH">
+                <label class="form-check-label" for="currency1">UAH</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency2" th:errorclass="is-invalid" th:value="USD">
+                <label class="form-check-label" for="currency2">USD</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" th:field="*{currency}" name="inlineRadioOptions" id="currency3" th:errorclass="is-invalid" th:value="EUR">
+                <label class="form-check-label" for="currency3">EUR</label>
+            </div>
+            <span th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="price">Ціна</label>
+        <input type="number" min="1" th:value="*{price}" class="form-control" th:field="*{price}" th:errorclass="is-invalid" name="price" id="price" >
+        <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="housing_area">Житлова площа</label>
+        <input type="text" class="form-control" name="housing_area" th:value="*{housingArea}" th:errorclass="is-invalid" th:field="*{housingArea}" id="housing_area">
+        <span th:if="${#fields.hasErrors('housingArea')}" th:errors="*{housingArea}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="number_of_rooms">Кількість кімнат</label>
+        <input type="number" class="form-control" name="number_of_rooms" th:value="*{numberOfRooms}" th:errorclass="is-invalid" th:field="*{numberOfRooms}" id="number_of_rooms" >
+        <span th:if="${#fields.hasErrors('numberOfRooms')}" th:errors="*{numberOfRooms}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="repair">Стан ремонту</label>
+        <select class="form-control" id="repair" th:field="*{repairTitle}" th:errorclass="is-invalid" name="repair" >
+&lt;!&ndash;            <option th:value="null">Не вибрано</option>&ndash;&gt;
+            <option th:each="rep : ${repairs}"
+                    th:text="${rep.title}"
+                    th:value="${rep.title}" th:selected="${rep.title} == *{repairTitle}">
+        </select>
+        <span th:if="${#fields.hasErrors('repairTitle')}" th:errors="*{repairTitle}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="construction">Тип будинку</label>
+        <select class="form-control" id="construction" th:errorclass="is-invalid" th:field="*{constructionId}" name="construction" >
+            <option value="0">Не вибрано</option>
+            <option th:each="construction : ${constructions}"
+                    th:selected="${construction.id} == *{constructionId}"
+                    th:text="${construction.title}"
+                    th:value="${construction.id}">
+        </select>
+        <span th:if="${#fields.hasErrors('constructionId')}" th:errors="*{constructionId}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="heating">Тип опалення</label>
+        <select class="form-control" id="heating" th:errorclass="is-invalid" th:field="*{heatingId}" name="heating" >
+            <option th:each="heating : ${heatings}"
+                    th:text="${heating.title}"
+                    th:value="${heating.id}"
+                    th:selected="${heating.id} == *{heatingId}">
+        </select>
+        <span th:if="${#fields.hasErrors('heatingId')}" th:errors="*{heatingId}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="furnishing">Наявність меблів</label>
+        <div id="furnishing">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" th:field="*{furnishing}" th:errorclass="is-invalid" th:checked="*{furnishing == true}" type="radio" name="inlineRadioOptions" id="furnishing1" th:value="true">
+                <label class="form-check-label" for="furnishing1">Так</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" th:field="*{furnishing}" th:errorclass="is-invalid" th:checked="*{furnishing == false}"  name="inlineRadioOptions" id="furnishing2" th:value="false">
+                <label class="form-check-label" for="furnishing2">Ні</label>
+            </div>
+        </div>
+        <span th:if="${#fields.hasErrors('furnishing')}" th:errors="*{furnishing}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="floors">Кількість поверхів у будинку</label>
+        <input type="number" min="1" class="form-control" th:errorclass="is-invalid" th:value="*{numberOfFloors}" th:field="*{numberOfFloors}" name="floors" id="floors">
+        <span th:if="${#fields.hasErrors('numberOfFloors')}" th:errors="*{numberOfFloors}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="landArea">Площа земельної ділянки</label>
+        <input type="text" min="1" class="form-control" th:errorclass="is-invalid" th:value="*{landArea}" th:field="*{landArea}" name="landArea" id="landArea" >
+        <span th:if="${#fields.hasErrors('landArea')}" th:errors="*{landArea}" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label for="add_information">Опис</label>
+        <input type="text" class="form-control" th:value="*{additionalInformation}" th:errorclass="is-invalid" th:field="*{additionalInformation}" id="add_information">
+        <span th:if="${#fields.hasErrors('additionalInformation')}" th:errors="*{additionalInformation}" class="invalid-feedback"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="imageFile">Фото</label>
+        <input type="file" class="form-control-file" id="imageFile" accept="image/jpeg, image/png" name="imageFiles" multiple>
+        <small class="form-text text-muted" style="color: red">*Зображення відображатимуться в тому порядку, в якому вони завантажені</small>
+        <small class="form-text text-muted" style="color: red">**Приймаються файли тільки у форматі png або jpeg</small>
+        <small class="form-text text-muted" style="color: red">***Якщо змінювати зображення не потрібно, фото не завантажуйте</small>
+    </div>
+
+    <div class="form-group">
+        <label for="region">Регіон</label>
+        <div class="form-group">
+            <select th:field="*{regionTitle}" class="custom-select" th:errorclass="is-invalid" name="region" id="region" onchange="updateLocalities()">
+                &lt;!&ndash;                <option value="null" th:value="'Не вибрано'">Не вибрано</option>&ndash;&gt;
+                <tr th:each="region : ${regions}">
+                    <option th:text="${region.title}" th:selected="${region.title} == *{regionTitle}" th:value="${region.title}"></option>
+                </tr>
+            </select>
+            <span th:if="${#fields.hasErrors('regionTitle')}" th:errors="*{regionTitle}" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <div class="form-group" style="display: none;" id="localityDiv">
+        <label for="localityId">Населений пункт</label>
+        <div class="form-group">
+            <select th:field="*{localityId}" class="custom-select" th:errorclass="is-invalid" name="localityId" onchange="updateDistricts()" id="localityId">
+                &lt;!&ndash;                <option value="0" th:value="0">Не вибрано</option>&ndash;&gt;
+                <tr th:each="locality : ${localities}">
+                    <option th:text="${locality.title}" th:value="${locality.id}" th:selected="${locality.id} == *{localityId}" th:attr="data-region=${locality.region.title}"></option>
+                </tr>
+            </select>
+            <span th:if="${#fields.hasErrors('localityId')}" th:errors="*{localityId}" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <div class="form-group" style="display: none;" id="districtDiv">
+        <label for="districtId">Район</label>
+        <div class="form-group">
+            <select th:field="*{districtId}" class="custom-select" th:errorclass="is-invalid" name="districtId" id="districtId">
+                &lt;!&ndash;                <option th:text="'Не вибрано'" th:value="0"></option>&ndash;&gt;
+                <tr th:each="district : ${districts}">
+                    <option th:text="${district.title}" th:selected="${district.id} == *{districtId}" th:value="${district.id}" th:attr="data-locality=${district.locality.id}"></option>
+                </tr>
+            </select>
+            <span th:if="${#fields.hasErrors('districtId')}" th:errors="*{districtId}" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Далі</button>
+</form>-->
+<script th:inline="javascript">
+
+    var selectedRegion = [[${realtyHouse.regionTitle}]];
+    var selectedLocality = [[${realtyHouse.localityId}]];
+    var selectedDistrict = "null"
+
+    var selectedRegionOfLocality;
+    var initialRun = true;
+
+    function setSelectedOption(elementId, value) {
+        var element = document.getElementById(elementId);
+        for (var i = 0; i < element.options.length; i++) {
+            if (element.options[i].value === value) {
+                element.options[i].selected = true;
+                break;
+            }
+        }
+    }
+
+    function updatePreviousLocalities() {
+        var regionSelect = document.getElementById("region");
+        selectedRegion = regionSelect.options[regionSelect.selectedIndex].value;
+        var localitySelect = document.getElementById("localityId");
+        var localities = localitySelect.getElementsByTagName("option");
+        var localityFound = false;
+
+        for (var i = 0; i < localities.length; i++) {
+            var localityRegion = localities[i].getAttribute("data-region");
+            if (localityRegion === selectedRegion || localityRegion === 'Не вибрано') {
+                localities[i].style.display = "block";
+                selectedRegionOfLocality = selectedRegion;
+                localityFound = true;
+            } else {
+                localities[i].style.display = "none";
+            }
+        }
+
+        if (localityFound) {
+
+            setSelectedOption("localityId", selectedLocality);
+
+            document.getElementById("localityDiv").style.display = "block";
+            document.getElementById("districtDiv").style.display = "none";
+        } else {
+            document.getElementById("localityDiv").style.display = "none";
+            document.getElementById("districtDiv").style.display = "none";
+        }
+    }
+
+    function updatePreviousDistricts() {
+        var localitySelect = document.getElementById("localityId");
+        selectedLocality = localitySelect.options[localitySelect.selectedIndex].value;
+        var districtSelect = document.getElementById("districtId");
+        var districts = districtSelect.getElementsByTagName("option");
+        var districtFound = false;
+
+        for (var i = 0; i < districts.length; i++) {
+            var district = districts[i].getAttribute("data-locality");
+            if (district === selectedLocality) {
+                districts[i].style.display = "block";
+                districtFound = true;
+            } else {
+                districts[i].style.display = "none";
+            }
+        }
+
+        if (districtFound) {
+            setSelectedOption("districtId", selectedDistrict);
+            document.getElementById("districtDiv").style.display = "block";
+        } else {
+            document.getElementById("districtDiv").style.display = "none";
+            document.getElementById("districtId").value = "0";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        updatePreviousLocalities();
+        updatePreviousDistricts();
+        initialRun = false;
+    });
+
+    validateInputPositiveInteger('price')
+    validateInputPositiveInteger('number_of_rooms')
+    validateInputPositiveInteger('numberOfFloors')
+    validateInputPositiveInteger('floors')
+
+    validateInputPositiveFloat('housing_area')
+    validateInputPositiveFloat('landArea')
+</script>
+</body>
+</html>

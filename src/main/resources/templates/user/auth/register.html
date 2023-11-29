@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+</head>
+<body>
+<div class="fixed-top">
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <a class="navbar-brand" th:href="@{/static}">Всі оголошення</a>
+    <a class="navbar-brand" sec:authorize="isAuthenticated()" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+    <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+    <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+    <div class="navbar-nav">
+      <form th:action="@{/auth/login}" class="nav-item">
+        <input type="submit" class="btn btn-outline-primary" value="Login">
+      </form>
+      <form th:action="@{/auth/register}" class="nav-item">
+        <input type="submit" class="btn btn-outline-secondary" value="Sign Up">
+      </form>
+    </div>
+  </nav>
+</div>
+<div class="container">
+<div class="row justify-content-center align-items-center" style="height: 100vh;">
+    <div>
+    <div class="text-center">
+        <h1>Реєстрація</h1>
+    </div>
+<form action="/auth/register" id="myForm" method="post" th:object="${user}" class="needs-validation">
+
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <label  for="firstName">Ім'я</label>
+            <input type="text" class="form-control" th:field="*{firstname}" id="firstName" th:errorclass="is-invalid"  >
+            <span th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}" class="invalid-feedback"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="patronymic">По-батькові</label>
+            <input type="text" class="form-control" th:field="*{patronymic}" id="patronymic" th:errorclass="is-invalid" name="lastName"  >
+            <span th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}" class="invalid-feedback"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="lastName">Прізвище</label>
+            <input type="text" class="form-control" id="lastName" th:field="*{lastname}" th:errorclass="is-invalid" name="lastName"  >
+            <span th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="invalid-feedback"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="email">Електронна пошта</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="email" th:field="*{email}" th:errorclass="is-invalid" name="email">
+                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6 mb-3">
+            <label for="phone">Номер телефону</label>
+            <input type="number" id="phone" class="form-control" th:errorclass="is-invalid" maxlength="10" th:field="*{phoneNumber}" >
+            <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="invalid-feedback"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="password">Пароль</label>
+            <input type="password" class="form-control" id="password" th:errorclass="is-invalid" maxlength="15" th:field="*{password}" name="password"
+                   aria-describedby="passwordHelpInline">
+                <input type="checkbox" id="eyeicon" >
+                <label class="form-check-label" for="eyeicon">Показати пароль</label>
+                <br>
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Реєстрація</button>
+</form>
+</div>
+</div>
+</div>
+<script>
+  let eyeicon = document.getElementById("eyeicon");
+  let password = document.getElementById("password");
+
+  eyeicon.onclick = function () {
+    if (password.type === "password") {
+      password.type = "text";
+    } else {
+      password.type = "password";
+    }
+  }
+</script>
+</body>
+</html>

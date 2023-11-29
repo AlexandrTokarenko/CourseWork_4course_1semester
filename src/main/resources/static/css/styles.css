@@ -1,0 +1,74 @@
+.heart{
+    width: 50px; height: 50px; color: red; border: none; background-color: white; cursor: pointer;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* vh stands for viewport height */
+}
+
+.invalid-feedback{
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.error{
+    color: red;
+}
+
+table{
+    margin: auto;
+}
+img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.navbar-nav {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .btn {
+    margin-left: 5px;
+}
+
+/* Add your custom CSS styles here */
+.card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-img-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text span {
+    font-weight: bold;
+}
+
+.fixed-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.content {
+    margin-top: 80px; /* Adjust this margin to match the button's height */
+    margin-bottom: 60px
+}

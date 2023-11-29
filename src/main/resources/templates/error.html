@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Advertisement</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <style>
+        h1,h2 {
+            margin-left: 80px;
+            margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+<div class="fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <a class="navbar-brand" th:href="@{/static}">Всі оголошення</a>
+        <a class="navbar-brand" sec:authorize="isAuthenticated()" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+        <div class="navbar-nav" sec:authorize="!isAuthenticated()">
+            <form th:action="@{/auth/login}" class="nav-item">
+                <input type="submit" class="btn btn-outline-primary" value="Login">
+            </form>
+            <form th:action="@{/auth/register}" class="nav-item">
+                <input type="submit" class="btn btn-outline-secondary" value="Sign Up">
+            </form>
+        </div>
+        <a class="btn btn-lg btn-danger ml-auto" sec:authorize="isAuthenticated()" th:href="@{/auth/logout}">Вихід</a>
+    </nav>
+</div>
+<h1>Something went wrong! </h1>
+<h2>Our Engineers are on it</h2>
+</body>
+</html>

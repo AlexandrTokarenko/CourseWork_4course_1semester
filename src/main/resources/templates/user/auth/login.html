@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Authorization</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+<div class="fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <a class="navbar-brand" th:href="@{/}">Всі оголошення</a>
+        <a class="navbar-brand" sec:authorize="isAuthenticated()" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+        <div class="navbar-nav">
+            <form th:action="@{/auth/login}" class="nav-item">
+                <input type="submit" class="btn btn-outline-primary" value="Login">
+            </form>
+            <form th:action="@{/auth/register}" class="nav-item">
+                <input type="submit" class="btn btn-outline-secondary" value="Sign Up">
+            </form>
+        </div>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+        <div class="col-md-6">
+            <div class="text-center">
+                <h1>Авторизація</h1>
+            </div>
+            <h6 th:if="${param.error}"  class="text-center alert alert-danger">Неправильна електронна адреса або пароль</h6>
+            <form action="/auth/login"  method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Адреса електронної пошти</label>
+                    <input type="email" class="form-control" id="username" name="username" required aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password"  class="form-control" name="password" required id="password">
+                    <input type="checkbox" id="eyeicon" >
+                    <label class="form-check-label" for="eyeicon">Показати пароль</label>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox"  class="form-check-input" id="remember-me" name="remember-me">
+                    <label for="remember-me" class="form-check-label">Запам'ятати мене</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Авторизація</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    let eyeicon = document.getElementById("eyeicon");
+    let password = document.getElementById("password");
+
+    eyeicon.onclick = function () {
+        if (password.type === "password") {
+            password.type = "text";
+        } else {
+            password.type = "password";
+        }
+    }
+</script>
+</body>
+</html>

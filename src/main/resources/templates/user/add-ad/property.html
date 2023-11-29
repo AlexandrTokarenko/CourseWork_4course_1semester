@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Выставить объявление</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+<div class="fixed-top">
+  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <a class="navbar-brand" th:href="@{/}">Всі оголошення</a>
+    <a class="navbar-brand" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+    <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+    <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+    <a class="btn btn-lg btn-danger" style="margin-left: auto" th:href="@{/auth/logout}">Вихід</a>
+  </nav>
+</div>
+<div style="margin-top: 100px" class="text-center">
+  <h1>Викладення оголошення</h1>
+</div>
+<form th:action="@{/nedvizhimost/my-ads/add-ad/add-information}" style="width: 50%;margin: auto;" method="get">
+  <div class="form-group">
+    <label for="property">Виберіть те, що хочете викласти</label>
+    <div class="form-group">
+      <select class="custom-select" name="property" id="property" required>
+        <!--                <option value="Квартира">Квартира</option>-->
+        <!--                <option value="Приватний будинок">Приватний будинок</option>-->
+        <option th:each="property : ${properties}"
+                th:text="${property.title}"
+                th:value="${property.title}">
+      </select>
+      <!--            <div class="invalid-feedback">Example invalid custom select feedback</div>-->
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Вибрати</button>
+</form>
+</body>
+</html>

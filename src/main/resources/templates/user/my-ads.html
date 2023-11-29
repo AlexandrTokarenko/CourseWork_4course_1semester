@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мої оголошення</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+<div class="fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <a class="navbar-brand" th:href="@{/}">Всі оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/my-ads}">Мої оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/bookmarks}">Обрані оголошення</a>
+        <a class="navbar-brand" th:href="@{/nedvizhimost/filter}">Фільтр</a>
+        <a class="btn btn-lg btn-danger" style="margin-left: auto" th:href="@{/auth/logout}">Вихід</a>
+    </nav>
+</div>
+<!--<div style="margin-top: 100px" class="text-center">
+    <a th:href="@{/nedvizhimost/my-ads/add-ad/property}" class="btn btn-success">Викласти оголошення</a>
+</div>-->
+<!--<div>
+    <div class="container">
+        <div class="row">
+            <div th:each="realty: ${realties}" class="col-md-4 mb-4">
+                <div class="card">
+                    <img th:src="${realty.getFirstImage()}" class="card-img-top" alt="Image">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${realty.header}"></h5>
+                        <p class="card-text">Ціна: <span th:text="${realty.price} + ' ' + ${realty.currency}"></span></p>
+                        <p class="card-text">Адреса: <span th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title}"></span></p>
+                        <a href="#" class="btn btn-primary" th:href="@{/nedvizhimost/information/realty/{realtyId}(realtyId=${realty.id})}">Детальніше</a>
+                        <a class="btn btn-outline-primary" th:href="@{/nedvizhimost/my-ads/edit-ad/{realtyId}(realtyId=${realty.id})}">Редагувати</a>
+                        <a class="btn btn-outline-danger" th:href="@{/nedvizhimost/my-ads/delete-ad/{realtyId}(realtyId=${realty.id})}">Видалити</a>
+                        <form th:action="@{/nedvizhimost/my-ads/change-condition/{realtyId}(realtyId=${realty.id})}" method="post">
+                            <div class="form-check">
+                                <input value="true" class="form-check-input" type="radio" name="condition" th:name="condition" id="exampleRadios1" onchange="this.form.submit()" th:checked="${realty.advertisement.open == true}">
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Відкрите
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"  name="condition" id="exampleRadios2" value="false" onchange="this.form.submit()" th:checked="${realty.advertisement.open == false}">
+                                <label class="form-check-label" for="exampleRadios2">
+                                    Закрите
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+<div>
+    <h2 style="margin-top: 100px" class="text-center">Мої оголошення</h2>
+</div>
+    <div class="container content">
+        <div class="row">
+            <div th:each="realty : ${realties}" class="col-md-4 mb-4 ">
+                <div class="card">
+                    <img th:src="${realty.getFirstImage()}" class="card-img-top" alt="Image">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${realty.header}"></h5>
+                        <p class="card-text">Кількість кімнат: <span th:text="${realty.numberOfRooms}"></span></p>
+                        <p class="card-text">Ціна: <span th:text="${realty.getPriceInFirstCurrency} + ' ' + ${realty.getFirstCurrency.name()} + ' / ' + ${realty.getPriceInSecondCurrency()} + ' ' + ${realty.getLastCurrency().name()}"></span></p>
+                        <p class="card-text">Житлова площа: <span th:text="${realty.housingArea} + ' m&sup2'"></span></p>
+<!--                        <p class="card-text">Адреса: <span th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title}"></span></p>-->
+                        <p th:if="${realty.address.district} == null" class="card-text">Адреса: <span th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title}"></span></p>
+                        <p th:if="${realty.address.district} != null" class="card-text">Адреса: <span th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title} + ', ' + ${realty.address.district.title}"></span></p>
+                        <a href="#" class="btn btn-primary mt-2 d-block" th:href="@{/nedvizhimost/information/realty/{realtyId}(realtyId=${realty.id})}">Детальніше</a>
+                        <a href="#" class="btn btn-outline-success mt-2 d-block" th:href="@{/nedvizhimost/my-ads/edit-ad/{realtyId}(realtyId=${realty.id})}">Редагувати</a>
+                        <a href="#" class="btn btn-outline-danger mt-2 d-block" th:href="@{/nedvizhimost/my-ads/delete-ad/{realtyId}(realtyId=${realty.id})}">Видалити</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<a th:href="@{/nedvizhimost/my-ads/add-ad/property}" class="btn btn-success fixed-button">Викласти оголошення</a>
+
+<!-- Delete Confirmation Modal -->
+<!--<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Видалення оголошення</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Ви впевнені, що хочете видалити це оголошення?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ні</button>
+                <a id="confirmDeleteButton" class="btn btn-danger">Так</a>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+
+<!--<table style="width: 60%; margin-top: 20px" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Опис</th>
+        <th>Ціна</th>
+        <th>Адреса</th>
+        <th width="100">Додаткова інформація</th>
+        <th></th>
+        <th></th>
+        <th>Стан оголошення</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="realty : ${realties}">
+        <td th:text="${realty.header}"></td>
+        <td th:text="${realty.price}"></td>
+        <td th:if="${realty.address.district} == null"
+            th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title}"></td>
+        <td th:if="${realty.address.district} != null"
+            th:text="${realty.address.region.title} + ', ' + ${realty.address.locality.title} + ' ' + ${realty.address.district.title}"></td>
+        <td width="100">  <a th:href="@{/nedvizhimost/information/realty/{realtyId}(realtyId=${realty.id})}">Інформація</a></td>
+        <td><a class="btn btn-outline-primary"  th:href="@{/nedvizhimost/my-ads/edit-ad/{realtyId}(realtyId=${realty.id})}">редагувати</a></td>
+        <td><a class="btn btn-outline-danger" th:href="@{/nedvizhimost/my-ads/delete-ad/{realtyId}(realtyId=${realty.id})}">видалити</a></td>
+        <td>
+            <form th:action="@{/nedvizhimost/my-ads/change-condition/{realtyId}(realtyId=${realty.id})}" method="post">
+                <div class="form-check">
+                    <input value="true" class="form-check-input" type="radio" name="condition" th:name="condition" id="exampleRadios1" onchange="this.form.submit()" th:checked="${realty.advertisement.open == true}">
+                    <label class="form-check-label" for="exampleRadios1">
+                        Відкрите
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio"  name="condition" id="exampleRadios2" value="false" onchange="this.form.submit()" th:checked="${realty.advertisement.open == false}">
+                    <label class="form-check-label" for="exampleRadios2">
+                        Закрите
+                    </label>
+                </div>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>-->
+</body>
+</html>
+
