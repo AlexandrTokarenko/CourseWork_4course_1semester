@@ -21,8 +21,8 @@ function updateLocalities() {
     if (!localityFound) {
         document.getElementById("localityDiv").style.display = "none";
         document.getElementById("districtDiv").style.display = "none";
-          document.getElementById("localityId").value = "0"; // Set default value for locality
-          document.getElementById("districtId").value = "0"; // Set default value for district
+          document.getElementById("localityId").value = "0";
+          document.getElementById("districtId").value = "0";
     } else {
         localitySelect.value = "0";
         document.getElementById("localityDiv").style.display = "block";
@@ -49,7 +49,7 @@ function updateDistricts() {
 
     if (!districtFound) {
         document.getElementById("districtDiv").style.display = "none";
-        document.getElementById("districtId").value = "0"; // Set default value for district
+        document.getElementById("districtId").value = "0";
     } else {
         districtSelect.value = "0";
         document.getElementById("districtDiv").style.display = "block";

@@ -1,6 +1,5 @@
 package com.example.coursework.service.dataServices;
 
-import com.example.coursework.config.jwt.JwtService;
 import com.example.coursework.dto.AuthenticationRequest;
 import com.example.coursework.dto.AuthenticationResponse;
 import com.example.coursework.entity.Token;
@@ -29,7 +28,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
 
@@ -52,7 +50,7 @@ public class UserService {
       //  saveUserToken(savedUser, jwtToken);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+ /*   public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -70,9 +68,9 @@ public class UserService {
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
-    }
+    }*/
 
-    private void saveUserToken(User user, String jwtToken) {
+ /*   private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -120,7 +118,7 @@ public class UserService {
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
-    }
+    }*/
 
     private boolean emailExists(String email) {
 
